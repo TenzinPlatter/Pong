@@ -15,8 +15,11 @@ class App():
         self.clock = pygame.time.Clock()
         self.playerPaddle = Paddle.Paddle(100, 415, True)
         self.computerPaddle = Paddle.Paddle(1820, 415, False)
-
+        increaseSpeedTimer = 0
         while self.inGame:
+            increaseSpeedTimer += 1
+            if increaseSpeedTimer >= 20: 
+                self.ball.IncreaseVelocity
             #game loop for when playing, need some larger loop to handle points 
             self.clock.tick(G.FPS)
             self.Update()
@@ -36,7 +39,7 @@ class App():
 
     def Update(self):
         #updates ball - (moves and need to add calculation for next collision) - and moves paddles
-        self.ball.Update((self.playerPaddle, self.computerPaddle))
+        self.ball.Update(self.playerPaddle, self.computerPaddle)
         self.playerPaddle.Move(self.ball)
         self.computerPaddle.Move(self.ball)
 

@@ -23,9 +23,6 @@ class Ball():
         self.coordinate = [random.randrange(600, 800), random.randrange(400, 500)]
         self.velocity = [10, 10]
         self.radius = 50
-        self.nextCollision = [0, 0]
-        self.recentlyCollided = True
-
 
     def Draw(self, window):
         pygame.draw.circle(window, G.WHITE, self.coordinate, self.radius)
@@ -41,26 +38,29 @@ class Ball():
         else:
             self.coordinate = G.addLists(self.coordinate, self.velocity)
     
-    def Update(self, paddles):
+    def Update(self, playerPaddle, computerPaddle):
+        playerCollision = self.Collision(playerPaddle)
+        computerCollision = self.Collision(computerPaddle)
+        if playerCollision[G.HITPADDLE] or computerCollision[G.HITPADDLE]:
+            self.velocity[G.X] *= -1
         self.Move()
-        for paddle in paddles:
-            self.Collision(paddle)
-        if self.recentlyCollided:
-            #self.nextCollision = self.NextCollision()
-            self.recentlyCollided = False
 
     def Collision(self, paddle, x = -1, y = -1):
         #returns tuple of booleans - (hitPaddle, hitBorder) - if x and y not passed in
         #uses balls coordinates
-            if x == -1 or y == -1:
-                x = self.coordinate[G.X]
-                y = self.coordinate[G.Y]
-            hitPaddle = False
-            hitBorder = False
-            if x < 150 or x > 1770:
-                if y < paddle.rect.top + 125 and y > paddle.rect.top - 125:
-                    hitPaddle = True
-                else:
-                    hitBorder = True
 
+        #fix ball bouncing above paddle
+        if x == -1 or y == -1:
+            x = self.coordinate[G.X]
+            y = self.coordinate[G.Y]
+        hitPaddle = False
+        hitBorder = False
+        if x < 150 or x > 1770:
+            if y > paddle.rect.top and y < paddle.rect.top + 250:
+                hitPaddle = True
+            else:
+                hitBorder = True
+        return (hitPaddle, hitBorder)
 
+    def IncreaseVelocity(self):
+        self.velocity = G.addLists(self.velocity, G.BALLVECLOCITYINCREMENT)

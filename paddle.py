@@ -13,6 +13,7 @@ class Paddle():
         pygame.draw.rect(window, self.colour, self.rect)
 
     def Move(self, ball):
+        #add option to move with either mouse or keyboard
         if self.isPlayer:
             #if is player paddle moves with arrow keys
             keys = pygame.key.get_pressed()
@@ -24,8 +25,8 @@ class Paddle():
         else:
             #follows y coordinate of ball with a max speed
             distance = ball.coordinate[G.Y] - self.rect.top - 125
-            if  abs(distance) > G.paddleSpeed:
-                self.rect = self.rect.move(0, G.paddleSpeed * (-1 * (distance < 0)))  
+            if  abs(distance) > G.PADDLESPEED:
+                self.rect = self.rect.move(0, G.PADDLESPEED * (-1 * (distance < 0)))  
             else:
                 self.rect = self.rect.move(0, distance)
 

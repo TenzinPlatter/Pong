@@ -8,7 +8,8 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 HITPADDLE = 0
 HITBORDER = 1
-paddleSpeed = 10
+PADDLESPEED = 10
+BALLVECLOCITYINCREMENT= [5, 5]
 
 
 def addLists(list1, list2):
