@@ -21,4 +21,8 @@ class Paddle():
         
         else:
             pass
+
+
+    def BallCollision(self):
+        
         

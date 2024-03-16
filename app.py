@@ -7,7 +7,7 @@ import paddle as Paddle
 class App():
     def __init__(self):
         pygame.init()
-        self.running = True
+        self.inGame = True
         self.window = pygame.display.set_mode(G.WINSIZE)
         pygame.display.set_caption("Pong")
         self.ball = Ball.Ball()
@@ -15,7 +15,7 @@ class App():
         self.playerPaddle = Paddle.Paddle(100, 415, True)
         self.computerPaddle = Paddle.Paddle(1820, 415, False)
 
-        while self.running:
+        while self.inGame:
             self.clock.tick(G.FPS)
             self.Update()
             self.OnEvent()
