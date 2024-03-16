@@ -6,6 +6,10 @@ Y = 1
 FPS = 60
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+HITPADDLE = 0
+HITBORDER = 1
+paddleSpeed = 10
+
 
 def addLists(list1, list2):
     return list(map(add, list1, list2))
