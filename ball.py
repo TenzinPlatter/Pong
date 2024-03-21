@@ -20,47 +20,50 @@ started function to find next collision, part of ball class
 class Ball():
 
     def __init__(self):
-        self.coordinate = [random.randrange(600, 800), random.randrange(400, 500)]
-        self.velocity = [10, 10]
-        self.radius = 50
+        self.coordinate = [random.randrange(G.WINSIZE[G.X]/2 - 100, G.WINSIZE[G.X]/2 + 100), random.randrange(G.WINSIZE[G.Y]/2 - 100, G.WINSIZE[G.Y]/2 + 100)]
+        self.velocity = [12, 12]
+        self.radius = 15
 
     def Draw(self, window):
         pygame.draw.circle(window, G.WHITE, self.coordinate, self.radius)
     
-    def Move(self, calculating = False, tempCoord = [0, 0]):
+    def Move(self):
         tempX, tempY = G.addLists(self.coordinate, self.velocity)
-        if tempX > 1870 or tempX < 50:
+
+        if tempX < 90 or tempX > 1310: return "reset"
+
+
+        if tempX > G.WINSIZE[G.X] - self.radius or tempX < self.radius:
             self.velocity[G.X] *= -1
-        if tempY > 1030 or tempY < 50:
+        if tempY > G.WINSIZE[G.Y] - self.radius or tempY < self.radius:
             self.velocity[G.Y] *= -1
-        if calculating:
-            return G.addLists(tempCoord, self.velocity)
-        else:
-            self.coordinate = G.addLists(self.coordinate, self.velocity)
+
+        self.coordinate = G.addLists(self.coordinate, self.velocity)
     
     def Update(self, playerPaddle, computerPaddle):
-        playerCollision = self.Collision(playerPaddle)
-        computerCollision = self.Collision(computerPaddle)
-        if playerCollision[G.HITPADDLE] or computerCollision[G.HITPADDLE]:
-            self.velocity[G.X] *= -1
-        self.Move()
+        if self.velocity[G.X] > 0:
+            computerCollision = self.Collision(computerPaddle)
+            if computerCollision: self.velocity[G.X] *= -1
+        else:
+            playerCollision = self.Collision(playerPaddle)
+            if playerCollision: self.velocity[G.X] *= -1
 
-    def Collision(self, paddle, x = -1, y = -1):
-        #returns tuple of booleans - (hitPaddle, hitBorder) - if x and y not passed in
-        #uses balls coordinates
+        if self.Move() == "reset": self.Reset()
 
-        #fix ball bouncing above paddle
-        if x == -1 or y == -1:
-            x = self.coordinate[G.X]
-            y = self.coordinate[G.Y]
+
+    def Collision(self, paddle):
+        x = self.coordinate[G.X]
+        y = self.coordinate[G.Y]
         hitPaddle = False
-        hitBorder = False
-        if x < 150 or x > 1770:
-            if y > paddle.rect.top and y < paddle.rect.top + 250:
+        if x < 115 or x > G.WINSIZE[G.X] - 115:
+            if y + 30 > paddle.rect.top and y < paddle.rect.top + 230: #added some extra space above paddle where ball will still collide so it feels more forgiving
+                G.collisionSound.play()
                 hitPaddle = True
-            else:
-                hitBorder = True
-        return (hitPaddle, hitBorder)
+        return hitPaddle
 
-    def IncreaseVelocity(self):
-        self.velocity = G.addLists(self.velocity, G.BALLVECLOCITYINCREMENT)
+
+
+    def Reset(self):
+        G.resetSound.play()
+        self.coordinate = [random.randrange(G.WINSIZE[G.X]/2 - 100, G.WINSIZE[G.X]/2 + 100), random.randrange(G.WINSIZE[G.Y]/2 - 100, G.WINSIZE[G.Y]/2 + 100)]
+        self.velocity = [12,12]

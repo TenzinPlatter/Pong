@@ -8,18 +8,18 @@ class App():
     def __init__(self):
         #initializes all values
         pygame.init()
+        pygame.mixer.init()
         self.inGame = True
         self.window = pygame.display.set_mode(G.WINSIZE)
         pygame.display.set_caption("Pong")
         self.ball = Ball.Ball()
         self.clock = pygame.time.Clock()
-        self.playerPaddle = Paddle.Paddle(100, 415, True)
-        self.computerPaddle = Paddle.Paddle(1820, 415, False)
+        self.playerPaddle = Paddle.Paddle(100, G.WINSIZE[G.Y]/2 + 100, True)
+        self.computerPaddle = Paddle.Paddle(G.WINSIZE[G.X] - 100, G.WINSIZE[G.Y]/2 + 100, False)
         increaseSpeedTimer = 0
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(.1)
         while self.inGame:
-            increaseSpeedTimer += 1
-            if increaseSpeedTimer >= 20: 
-                self.ball.IncreaseVelocity
             #game loop for when playing, need some larger loop to handle points 
             self.clock.tick(G.FPS)
             self.Update()
@@ -27,6 +27,7 @@ class App():
             self.Render()
         
         self.Quit()
+
 
     def Render(self):
         #fill screen black to overwrite last frame then draws paddles and ball
@@ -38,7 +39,7 @@ class App():
         pygame.display.update()
 
     def Update(self):
-        #updates ball - (moves and need to add calculation for next collision) - and moves paddles
+        #updates/moves ball and moves paddles
         self.ball.Update(self.playerPaddle, self.computerPaddle)
         self.playerPaddle.Move(self.ball)
         self.computerPaddle.Move(self.ball)
